@@ -174,14 +174,51 @@
             </Border>
         </DataTemplate>
 
+        <DataTemplate x:Key="ActRewardDetailTemplate" x:DataType="shwhtga:ActReward">
+            <Grid Width="72" Margin="0,0,0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <shuxc:ItemIcon
+                        Width="64"
+                        Height="64"
+                        Icon="{Binding Icon}"
+                        Quality="{Binding Rarity}"/>
+                    <Border
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Background="#80000000"
+                        CornerRadius="0,0,4,4">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Foreground="#FFFFFFFF"
+                            Style="{ThemeResource CaptionTextBlockStyle}"
+                            Text="{Binding Number}"/>
+                    </Border>
+                </Grid>
+                <TextBlock
+                    Grid.Row="1"
+                    MaxWidth="72"
+                    Margin="0,2,0,0"
+                    HorizontalAlignment="Center"
+                    FontSize="11"
+                    MaxLines="2"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    Text="{Binding Name}"/>
+            </Grid>
+        </DataTemplate>
+
         <shvh:ActivityTemplateSelector x:Key="ActivityTemplateSelector">
             <shvh:ActivityTemplateSelector.SignInTemplate>
                 <DataTemplate x:DataType="shwhtga:ActSignIn">
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -196,61 +233,65 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding FormattedStatus}"/>
@@ -276,8 +317,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -292,61 +333,65 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding FormattedStatus}"/>
@@ -372,8 +417,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -388,61 +433,65 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding ExploreDetail.FormattedExplorePercent}"/>
@@ -468,8 +517,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -484,61 +533,65 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding FormattedStatus}"/>
@@ -564,8 +617,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -580,54 +633,58 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
@@ -635,7 +692,7 @@
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding TowerDetail.FormattedStar}"/>
@@ -661,8 +718,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -677,54 +734,58 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
@@ -732,7 +793,7 @@
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding RoleCombatDetail.FormattedMaxRound}"/>
@@ -758,8 +819,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -774,54 +835,58 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
@@ -829,7 +894,7 @@
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding HardChallengeDetail.FormattedProgress}"/>
@@ -855,8 +920,8 @@
                     <Grid ColumnSpacing="6" Style="{ThemeResource GridShimmerStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -871,61 +936,65 @@
                         </StackPanel>
                         <Grid
                             Grid.Row="0"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,6">
-                            <Button Padding="0">
+                            <Button Padding="0" ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewPageAnnouncementActivityRewardDetailTooltip}">
                                 <Button.Flyout>
                                     <Flyout FlyoutPresenterStyle="{ThemeResource FlyoutPresenterPadding6Style}">
-                                        <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding Name}"/>
+                                            <ItemsControl ItemsPanel="{StaticResource UniformGridColumns4Spacing6Template}" ItemsSource="{Binding RewardList}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <shuxc:ItemIcon
-                                                            Width="48"
-                                                            Height="48"
-                                                            Icon="{Binding Icon}"
-                                                            Quality="{Binding Rarity}"/>
-                                                        <Border
-                                                            HorizontalAlignment="Stretch"
-                                                            VerticalAlignment="Bottom"
-                                                            Background="#80000000"
-                                                            CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                                            <TextBlock
-                                                                MaxWidth="48"
-                                                                HorizontalAlignment="Center"
-                                                                Foreground="#FFFFFFFF"
-                                                                Style="{ThemeResource CaptionTextBlockStyle}"
-                                                                Text="{Binding Number}"/>
-                                                        </Border>
-                                                    </Grid>
+                                                    <ContentControl ContentTemplate="{StaticResource ActRewardDetailTemplate}" Content="{Binding}"/>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </Flyout>
+                                    </StackPanel>
+                                </Flyout>
                                 </Button.Flyout>
-                                <Grid DataContext="{Binding RewardList[0]}">
+                                <Grid>
                                     <shuxc:ItemIcon
                                         Width="36"
                                         Height="36"
-                                        Icon="{Binding Icon}"
-                                        Quality="{Binding Rarity}"/>
+                                        Icon="{Binding RewardList[0].Icon}"
+                                        Quality="{Binding RewardList[0].Rarity}"/>
                                     <Border
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Bottom"
                                         Background="#80000000"
                                         CornerRadius="{ThemeResource ControlCornerRadiusBottom}">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Foreground="#FFFFFFFF"
-                                            Style="{ThemeResource CaptionTextBlockStyle}"
-                                            Text="{Binding Number}"/>
+                                        <Grid>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                Foreground="#FFFFFFFF"
+                                                Style="{ThemeResource CaptionTextBlockStyle}"
+                                                Text="{Binding RewardList[0].Number}"/>
+                                            <StackPanel
+                                                Margin="0,0,4,0"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="×"/>
+                                                <TextBlock
+                                                    FontSize="9"
+                                                    Foreground="#88FFFFFF"
+                                                    Text="{Binding RewardList.Count}"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Button>
                         </Grid>
                         <Border
                             Grid.Row="0"
-                            Grid.Column="2"
+                            Grid.Column="1"
                             Margin="0,6,6,6"
                             VerticalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" Text="{Binding FormattedStatus}"/>
