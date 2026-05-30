@@ -428,22 +428,26 @@
                         MinItemWidth="302"
                         Spacing="16">
                         <shuxvs:StatisticsCard DataContext="{Binding Statistics.AvatarWish}" Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolNegationToVisibilityConverter}}"/>
-                        <shuxvs:StatisticsCard DataContext="{Binding Statistics.WeaponWish}" Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolNegationToVisibilityConverter}}"/>
+                        <shuxvs:StatisticsCard DataContext="{Binding Statistics.WeaponWish}" ShowCombinedModeToggle="False" Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolNegationToVisibilityConverter}}"/>
                         <shuxvs:StatisticsCard
                             DataContext="{Binding Statistics.StandardWish}"
                             ShowUpPull="False"
+                            ShowCombinedModeToggle="False"
                             Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolNegationToVisibilityConverter}}"/>
                         <shuxvs:StatisticsCard
                             DataContext="{Binding Statistics.ChronicledWish}"
                             ShowUpPull="False"
+                            ShowCombinedModeToggle="False"
                             Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolNegationToVisibilityConverter}}"/>
                         <shuxvs:BeyondStatisticsCard
                             DataContext="{Binding Statistics.BeyondStandardWish}"
                             ShowUpPull="False"
+                            ShowCombinedModeToggle="False"
                             Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <shuxvs:StatisticsCard
                             DataContext="{Binding Statistics.BeyondEventWish}"
                             ShowUpPull="True"
+                            ShowCombinedModeToggle="False"
                             Visibility="{Binding DataContext.IsBeyondMode, ElementName=RootPage, Converter={StaticResource BoolToVisibilityConverter}}"/>
                     </shuxcp:HorizontalEqualPanel>
                 </ScrollViewer>

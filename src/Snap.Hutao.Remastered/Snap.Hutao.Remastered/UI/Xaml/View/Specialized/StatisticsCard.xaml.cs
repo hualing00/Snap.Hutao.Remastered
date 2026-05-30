@@ -10,6 +10,7 @@ namespace Snap.Hutao.Remastered.UI.Xaml.View.Specialized;
 
 [DependencyProperty<bool>("ShowUpPull", DefaultValue = true, NotNull = true)]
 [DependencyProperty<bool>("ShowCombinedTotal", DefaultValue = false, NotNull = true)]
+[DependencyProperty<bool>("ShowCombinedModeToggle", DefaultValue = true, NotNull = true)]
 public sealed partial class StatisticsCard : UserControl
 {
     public StatisticsCard()
