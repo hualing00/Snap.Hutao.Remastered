@@ -37,6 +37,10 @@ public sealed partial class NotifyIconController : IDisposable
     private readonly HutaoNativeNotifyIcon native;
     private GCHandle<NotifyIconController> handle;
 
+    private CancellationTokenSource? menuDelayCts;
+    private RECT pendingIcon;
+    private POINT pendingPoint;
+
     private bool disposed;
 
     public NotifyIconController(IServiceProvider serviceProvider)
@@ -90,7 +94,7 @@ public sealed partial class NotifyIconController : IDisposable
 
     public unsafe void Create()
     {
-        native.Create(HutaoNativeNotifyIconCallback.Create(&OnNotifyIconCallback), handle, HutaoRuntime.GetDisplayNameForNotifyIcon() ??"Snap Hutao Remastered");
+        native.Create(HutaoNativeNotifyIconCallback.Create(&OnNotifyIconCallback), handle, HutaoRuntime.GetDisplayNameForNotifyIcon() ?? "Snap Hutao Remastered");
         if (XamlApplicationLifetime.IsFirstRunAfterUpdate)
         {
             UpdateMsixNotifyIconRegistryEntries();
@@ -133,10 +137,10 @@ public sealed partial class NotifyIconController : IDisposable
                 controller.OnContextMenuRequested(icon, point);
                 break;
             case HutaoNativeNotifyIconCallbackKind.LeftButtonDown:
-                controller.OnContextMenuRequested(icon, point);
+                controller.OnLeftButtonDown(icon, point);
                 break;
             case HutaoNativeNotifyIconCallbackKind.LeftButtonDoubleClick:
-                controller.OnWindowRequested();
+                controller.OnLeftButtonDoubleClick();
                 break;
         }
     }
@@ -174,6 +178,33 @@ public sealed partial class NotifyIconController : IDisposable
         xamlHostWindow.ShowFlyoutAt(lazyMenu.Value, new(point.x, point.y), icon);
     }
 
+    private void OnLeftButtonDown(RECT icon, POINT point)
+    {
+        menuDelayCts?.Cancel();
+        menuDelayCts = new();
+        CancellationToken token = menuDelayCts.Token;
+        pendingIcon = icon;
+        pendingPoint = point;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(200, token).ConfigureAwait(false);
+                xamlHostWindow.DispatcherQueue.TryEnqueue(() => OnContextMenuRequested(pendingIcon, pendingPoint));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        });
+    }
+
+    private void OnLeftButtonDoubleClick()
+    {
+        menuDelayCts?.Cancel();
+        OnWindowRequested();
+    }
+
     private void OnWindowRequested()
     {
         if (disposed)
@@ -209,6 +240,8 @@ public sealed partial class NotifyIconController : IDisposable
                     {
                         window.SwitchTo();
                         window.AppWindow.MoveInZOrderAtTop();
+                        // #112
+                        window.Activate();
                     }
 
                     return;
