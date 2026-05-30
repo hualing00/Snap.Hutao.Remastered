@@ -266,13 +266,8 @@ public sealed partial class HutaoUserOptions : ObservableObject
                         case KnownReturnCode.PleaseLogin:
                         case KnownReturnCode.RET_TOKEN_INVALID:
                         case KnownReturnCode.LoginStateInvalid:
-                            await LogoutOrUnregisterAsync().ConfigureAwait(false);
-                            break;
                         default:
-                            await taskContext.SwitchToMainThreadAsync();
-                            authTokenExpiration = default;
-                            UserName = username;
-                            IsLoggedIn = true;
+                            await LogoutOrUnregisterAsync().ConfigureAwait(false);
                             break;
                     }
 
