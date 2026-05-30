@@ -62,10 +62,15 @@ public sealed class TypedWishSummaryBuilder
                     if (isUp)
                     {
                         averageUpOrangePullTracker.Add(lastUpOrangePullTracker);
+                        SummaryItem summaryItem = source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp);
+                        summaryItem.TotalCyclePull = lastUpOrangePullTracker;
+                        summaryItems.Add(summaryItem);
                         lastUpOrangePullTracker = 0;
                     }
-
-                    summaryItems.Add(source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp));
+                    else
+                    {
+                        summaryItems.Add(source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp));
+                    }
 
                     lastOrangePullTracker = 0;
                     ++totalOrangePullTracker;
@@ -126,10 +131,15 @@ public sealed class TypedWishSummaryBuilder
                     if (isUp)
                     {
                         averageUpOrangePullTracker.Add(lastUpOrangePullTracker);
+                        SummaryItem summaryItem = source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp);
+                        summaryItem.TotalCyclePull = lastUpOrangePullTracker;
+                        summaryItems.Add(summaryItem);
                         lastUpOrangePullTracker = 0;
                     }
-
-                    summaryItems.Add(source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp));
+                    else
+                    {
+                        summaryItems.Add(source.ToSummaryItem(lastOrangePullTracker, item.Time, isUp));
+                    }
 
                     lastOrangePullTracker = 0;
                     ++totalOrangePullTracker;

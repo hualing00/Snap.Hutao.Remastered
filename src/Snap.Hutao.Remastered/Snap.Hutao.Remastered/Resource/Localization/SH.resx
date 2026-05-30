@@ -1325,6 +1325,9 @@
   <data name="ViewControlStatisticsCardUpText" xml:space="preserve">
     <value>UP</value>
   </data>
+  <data name="ViewControlStatisticsCardCombinedModeTooltip" xml:space="preserve">
+    <value>合并显示限定金总抽数</value>
+  </data>
   <data name="ViewControlStatisticsSegmentedItemContentPrediction" xml:space="preserve">
     <value>预测</value>
   </data>

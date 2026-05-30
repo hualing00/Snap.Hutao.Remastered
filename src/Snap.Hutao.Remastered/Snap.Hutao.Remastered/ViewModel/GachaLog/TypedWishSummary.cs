@@ -77,6 +77,69 @@ public sealed partial class TypedWishSummary : Wish, INotifyPropertyChanged
 
     public required List<SummaryItem> SummaryList { get; init; }
 
+    public bool ShowCombinedTotal
+    {
+        get => field;
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                OnPropertyChanged(nameof(DisplayList));
+            }
+        }
+    }
+
+    public List<SummaryItem> DisplayList
+    {
+        get
+        {
+            if (!ShowCombinedTotal)
+            {
+                return SummaryList;
+            }
+
+            return BuildCombinedView();
+        }
+    }
+
+    private List<SummaryItem> BuildCombinedView()
+    {
+        List<SummaryItem> result = [];
+        bool isFirst = true;
+
+        foreach (SummaryItem item in SummaryList)
+        {
+            if (item.IsUp)
+            {
+                // Clone with LastPull = TotalCyclePull to display the combined total
+                result.Add(new()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Icon = item.Icon,
+                    Badge = item.Badge,
+                    Quality = item.Quality,
+                    IsUp = item.IsUp,
+                    IsGuarantee = item.IsGuarantee,
+                    GuaranteeOrangeThreshold = item.GuaranteeOrangeThreshold,
+                    LastPull = item.TotalCyclePull,
+                    TotalCyclePull = item.TotalCyclePull,
+                    Color = item.Color,
+                    Time = item.Time,
+                });
+            }
+            else if (isFirst)
+            {
+                // Keep the most recent non-up item (unresolved loss)
+                result.Add(item);
+            }
+
+            isFirst = false;
+        }
+
+        return result;
+    }
+
     public required int MaxOrangePull { get; init; }
 
     public required int MinOrangePull { get; init; }

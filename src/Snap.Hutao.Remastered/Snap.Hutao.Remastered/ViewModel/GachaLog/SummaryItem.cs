@@ -16,6 +16,10 @@ public sealed class SummaryItem : Item
 
     public int LastPull { get; set; }
 
+    // Total pulls since the last rate-up (up) 5-star, combining both lost-50/50 and guarantee pity.
+    // Only meaningful for IsUp == true items.
+    public int TotalCyclePull { get; set; }
+
     public string FormattedTime
     {
         get => $"{Time.ToLocalTime():yyy.MM.dd HH:mm:ss}";

@@ -92,7 +92,7 @@
                             Visibility="{Binding IsUp, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                         <TextBlock
-                            Width="24"
+                            MinWidth="24"
                             Margin="0,0,8,0"
                             VerticalAlignment="Center"
                             Style="{StaticResource BodyTextBlockStyle}"
@@ -175,6 +175,16 @@
                                 TextTrimming="None"
                                 TextWrapping="NoWrap"/>
                         </Viewbox>
+                        <ToggleButton
+                            x:Name="CombinedModeToggle"
+                            Margin="0,0,4,0"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            FontWeight="Bold"
+                            ToolTipService.ToolTip="{shuxm:ResourceString Name=ViewControlStatisticsCardCombinedModeTooltip}"
+                            Visibility="{x:Bind DetailExpander.IsExpanded, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                            <TextBlock Text="&#x2605;"/>
+                        </ToggleButton>
                         <shuxc:LayoutSwitch
                             x:Name="ItemsPanelSelector"
                             Margin="6,0,0,0"
@@ -413,7 +423,7 @@
                     Padding="0,6,0,12"
                     ItemContainerStyle="{StaticResource NoneSelectionListViewItemStyle}"
                     ItemTemplate="{StaticResource SummaryListTemplate}"
-                    ItemsSource="{Binding SummaryList}"
+                    ItemsSource="{Binding DisplayList}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
                     SelectionMode="None"/>
             </cwcont:Case>
@@ -423,7 +433,7 @@
                     Padding="0,12"
                     ItemContainerStyle="{StaticResource NoneSelectionGridViewItemStyle}"
                     ItemTemplate="{ThemeResource OrangeGridTemplate}"
-                    ItemsSource="{Binding SummaryList}"
+                    ItemsSource="{Binding DisplayList}"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
                     SelectionMode="None"/>
             </cwcont:Case>
