@@ -19,6 +19,7 @@ public sealed partial class HutaoPassportViewModel : Abstraction.ViewModel
     private readonly INavigationService navigationService;
     private readonly IServiceProvider serviceProvider;
     private readonly IMessenger messenger;
+    private readonly ITaskContext taskContext;
 
     [GeneratedConstructor]
     public partial HutaoPassportViewModel(IServiceProvider serviceProvider);
@@ -117,6 +118,7 @@ public sealed partial class HutaoPassportViewModel : Abstraction.ViewModel
     {
         SentrySdk.AddBreadcrumb(BreadcrumbFactory.CreateUI("Logout", "HutaoPassportViewModel.Command"));
         await HutaoUserOptions.LogoutAsync().ConfigureAwait(false);
+        await taskContext.SwitchToMainThreadAsync();
         PassportUserNameHint = SH.ViewPageHutaoPassportUserNameHint;
     }
 
