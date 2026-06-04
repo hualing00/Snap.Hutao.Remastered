@@ -31,7 +31,17 @@
 
         <DataTemplate x:Key="HardChallengeListTemplate" x:DataType="shvh:HardChallengeView">
             <StackPanel Margin="0,6,0,8">
-                <TextBlock Text="{Binding Schedule}"/>
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Schedule}"/>
+                    <TextBlock
+                        Grid.Column="1"
+                        Opacity="0.8"
+                        Text="{Binding MaxDifficulty}"/>
+                </Grid>
                 <MenuFlyoutSeparator Margin="3,2"/>
                 <TextBlock
                     Opacity="0.6"

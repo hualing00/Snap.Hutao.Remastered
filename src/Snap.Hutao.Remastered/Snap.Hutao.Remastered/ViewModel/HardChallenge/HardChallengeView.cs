@@ -3,9 +3,11 @@
 
 using Snap.Hutao.Remastered.Model;
 using Snap.Hutao.Remastered.Model.Entity;
+using Snap.Hutao.Remastered.Model.Intrinsic;
 using Snap.Hutao.Remastered.UI.Xaml.Data;
 using Snap.Hutao.Remastered.Web.Hoyolab.Takumi.GameRecord.HardChallenge;
 using System.Collections.Immutable;
+using System.Globalization;
 using MetadataHardChallengeSchedule = Snap.Hutao.Remastered.Model.Metadata.HardChallengeSchedule;
 
 namespace Snap.Hutao.Remastered.ViewModel.HardChallenge;
@@ -33,6 +35,22 @@ public sealed partial class HardChallengeView : IEntityAccess<HardChallengeEntry
 
         DataEntries = builder.ToImmutable().AsAdvancedCollectionView();
 
+        HardChallengeDifficultyLevel maxDifficulty = default;
+        if (hardChallengeData.SinglePlayer.HasData)
+        {
+            maxDifficulty = hardChallengeData.SinglePlayer.Best.Difficulty;
+        }
+
+        if (hardChallengeData.MultiPlayer.HasData && hardChallengeData.MultiPlayer.Best.Difficulty > maxDifficulty)
+        {
+            maxDifficulty = hardChallengeData.MultiPlayer.Best.Difficulty;
+        }
+
+        if (maxDifficulty > HardChallengeDifficultyLevel.None)
+        {
+            MaxDifficulty = maxDifficulty.GetLocalizedDescription(SH.ResourceManager, CultureInfo.CurrentCulture);
+        }
+
         BlingAvatars = hardChallengeData.Blings.SelectAsArray(AvatarBling.Create, context);
         Engaged = true;
     }
@@ -51,6 +69,8 @@ public sealed partial class HardChallengeView : IEntityAccess<HardChallengeEntry
     public string Schedule { get => SH.FormatModelEntityHardChallengeSchedule(ScheduleId - 5269000, ScheduleName); }
 
     public string FormattedTime { get; }
+
+    public string? MaxDifficulty { get; }
 
     public bool Engaged { get; }
 
