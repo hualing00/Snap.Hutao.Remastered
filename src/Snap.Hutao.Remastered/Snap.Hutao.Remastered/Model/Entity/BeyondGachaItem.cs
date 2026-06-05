@@ -22,15 +22,13 @@ public sealed class BeyondGachaItem
 
     public GachaType GachaType { get; set; }
 
+    public GachaType QueryType { get; set; }
+
     public uint ItemId { get; set; }
 
     public DateTimeOffset Time { get; set; }
 
     public long Id { get; set; }
-
-    public string ItemType { get; set; } = default!;
-
-    public string ItemName { get; set; } = default!;
 
     public long ScheduleId { get; set; }
 
@@ -46,11 +44,10 @@ public sealed class BeyondGachaItem
         {
             ArchiveId = archiveId,
             GachaType = item.GachaType,
+            QueryType = item.GachaType.ToQueryType(),
             ItemId = uint.Parse(item.ItemId),
             Time = item.Time,
             Id = item.Id,
-            ItemType = item.ItemType,
-            ItemName = item.ItemName,
             ScheduleId = long.Parse(item.ScheduleId),
             RankType = (long)item.RankType,
             Uid = item.Uid,
@@ -64,11 +61,10 @@ public sealed class BeyondGachaItem
         {
             ArchiveId = archiveId,
             GachaType = item.GachaType,
+            QueryType = item.GachaType.ToQueryType(),
             ItemId = item.ItemId,
             Time = new(item.Time, TimeSpan.FromHours(timezoneOffset)),
             Id = item.Id,
-            ItemType = item.ItemType,
-            ItemName = item.ItemName,
             ScheduleId = item.ScheduleId,
             RankType = item.RankType,
             Uid = string.Empty, // Hk4eUGCItem doesn't have Uid
@@ -76,7 +72,7 @@ public sealed class BeyondGachaItem
         };
     }
 
-    public Hk4eUGCItem ToHk4eUGCItem()
+    public Hk4eUGCItem ToHk4eUGCItem(Metadata.Item.BeyondItem beyondItem)
     {
         return new()
         {
@@ -84,8 +80,8 @@ public sealed class BeyondGachaItem
             ItemId = ItemId,
             Time = Time.UtcDateTime,
             Id = Id,
-            ItemType = ItemType,
-            ItemName = ItemName,
+            ItemType = beyondItem.TypeDescription ?? string.Empty,
+            ItemName = beyondItem.Name,
             ScheduleId = ScheduleId,
             RankType = RankType,
         };

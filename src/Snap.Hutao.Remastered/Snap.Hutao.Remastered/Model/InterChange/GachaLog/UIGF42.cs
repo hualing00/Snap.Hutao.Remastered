@@ -7,10 +7,7 @@ namespace Snap.Hutao.Remastered.Model.InterChange.GachaLog;
 public class UIGF42 : UIGF
 {
     // ReSharper disable once InconsistentNaming
-    [JsonPropertyName("hkrpg")]
-    public ImmutableArray<UIGFEntry<Hk4eItem>> Hkrpg { get; set; } = [];
-
-    // ReSharper disable once InconsistentNaming
     [JsonPropertyName("hk4e_ugc")]
+    [JsonPropertyOrder(2)]
     public ImmutableArray<UIGFEntry<Hk4eUGCItem>> Hk4eUgc { get; set; } = [];
 }

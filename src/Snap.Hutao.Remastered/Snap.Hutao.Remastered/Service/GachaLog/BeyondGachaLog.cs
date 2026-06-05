@@ -10,13 +10,4 @@ public static class BeyondGachaLog
         GachaType.UGCStandard,
         GachaType.UGCAvatarEventWish,
     ];
-
-    public static readonly FrozenSet<GachaType> AvatarEventWishTypes =
-    [
-        GachaType.UGCAvatarEventWish,
-        GachaType.UGCActivityAvatarMaleOne,
-        GachaType.UGCActivityAvatarMaleTwo,
-        GachaType.UGCActivityAvatarFemaleOne,
-        GachaType.UGCActivityAvatarFemaleTwo,
-    ];
 }

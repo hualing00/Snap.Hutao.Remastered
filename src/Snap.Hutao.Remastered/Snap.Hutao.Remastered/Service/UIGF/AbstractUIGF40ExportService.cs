@@ -1,10 +1,13 @@
-﻿// Copyright (c) DGP Studio. All rights reserved.
+// Copyright (c) DGP Studio. All rights reserved.
 // Licensed under the MIT license.
 
 using Snap.Hutao.Remastered.Core;
 using Snap.Hutao.Remastered.Model.Entity;
 using Snap.Hutao.Remastered.Model.InterChange.GachaLog;
+using Snap.Hutao.Remastered.Model.Metadata.Abstraction;
 using Snap.Hutao.Remastered.Service.GachaLog;
+using Snap.Hutao.Remastered.Service.Metadata;
+using Snap.Hutao.Remastered.Service.Metadata.ContextAbstraction;
 using System.Collections.Immutable;
 using System.IO;
 
@@ -15,6 +18,7 @@ public abstract partial class AbstractUIGF40ExportService : IUIGFExportService
     protected readonly JsonSerializerOptions jsonOptions;
     protected readonly IServiceProvider serviceProvider;
     protected readonly ITaskContext taskContext;
+    protected readonly IMetadataService metadataService;
 
     [GeneratedConstructor]
     public partial AbstractUIGF40ExportService(IServiceProvider serviceProvider);
@@ -24,6 +28,8 @@ public abstract partial class AbstractUIGF40ExportService : IUIGFExportService
     public virtual async ValueTask ExportAsync(UIGFExportOptions exportOptions, CancellationToken token = default)
     {
         await taskContext.SwitchToBackgroundAsync();
+
+        GachaLogServiceMetadataContext metadataContext = await metadataService.GetContextAsync<GachaLogServiceMetadataContext>(token).ConfigureAwait(false);
 
         Model.InterChange.GachaLog.UIGF uigf = new()
         {
@@ -36,7 +42,7 @@ public abstract partial class AbstractUIGF40ExportService : IUIGFExportService
             },
         };
 
-        ExportGachaArchives(uigf, exportOptions.GachaArchiveUids);
+        ExportGachaArchives(uigf, exportOptions.GachaArchiveUids, metadataContext);
 
         using (FileStream stream = File.Create(exportOptions.FilePath))
         {
@@ -44,7 +50,7 @@ public abstract partial class AbstractUIGF40ExportService : IUIGFExportService
         }
     }
 
-    protected virtual void ExportGachaArchives(Model.InterChange.GachaLog.UIGF uigf, ImmutableArray<uint> uids)
+    protected virtual void ExportGachaArchives(Model.InterChange.GachaLog.UIGF uigf, ImmutableArray<uint> uids, GachaLogServiceMetadataContext metadataContext)
     {
         if (uids.Length <= 0)
         {
@@ -59,20 +65,25 @@ public abstract partial class AbstractUIGF40ExportService : IUIGFExportService
         {
             GachaArchive? archive = gachaLogRepository.GetGachaArchiveByUid($"{uid}");
             ArgumentNullException.ThrowIfNull(archive);
-            
+
             // Export standard gacha items
             ImmutableArray<GachaItem> dbItems = gachaLogRepository.GetGachaItemImmutableArrayByArchiveId(archive.InnerId);
-            int timezone = 0;
-            if (dbItems.Length > 0)
-            {
-                timezone = (int)dbItems[0].Time.Offset.Hours;
-            }
 
             UIGFEntry<Hk4eItem> hk4eEntry = new()
             {
                 Uid = uid,
                 TimeZone = 0,
-                List = dbItems.SelectAsArray(Hk4eItem.From),
+                List = dbItems.SelectAsArray(item =>
+                {
+                    INameQualityAccess nameQuality = metadataContext.GetNameQualityByItemId(item.ItemId);
+                    string itemType = item.ItemId.StringLength switch
+                    {
+                        8U => SH.ModelInterchangeUIGFItemTypeAvatar,
+                        5U => SH.ModelInterchangeUIGFItemTypeWeapon,
+                        _ => string.Empty,
+                    };
+                    return Hk4eItem.From(item, nameQuality.Name, itemType, ((int)nameQuality.Quality).ToString());
+                }),
             };
             hk4eResults.Add(hk4eEntry);
         }

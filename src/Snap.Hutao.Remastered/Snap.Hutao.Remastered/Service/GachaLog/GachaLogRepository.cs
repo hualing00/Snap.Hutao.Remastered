@@ -6,7 +6,6 @@ using Snap.Hutao.Remastered.Model.Entity;
 using Snap.Hutao.Remastered.Model.Entity.Database;
 using Snap.Hutao.Remastered.Service.Abstraction;
 using Snap.Hutao.Remastered.Web.Hoyolab.Hk4e.Event.GachaInfo;
-using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 
@@ -123,11 +122,9 @@ public sealed partial class GachaLogRepository : IGachaLogRepository
         this.AddRange(items);
     }
 
-    public void RemoveBeyondGachaItemRangeByArchiveIdAndGachaTypeNewerThanEndId(Guid archiveId, GachaType GachaType, long endId)
+    public void RemoveBeyondGachaItemRangeByArchiveIdAndGachaTypeNewerThanEndId(Guid archiveId, GachaType queryType, long endId)
     {
-        FrozenSet<GachaType> queryTypes = GetQueryTypes(GachaType);
-
-        this.Delete<BeyondGachaItem>(i => i.ArchiveId == archiveId && queryTypes.Contains(i.GachaType) && i.Id >= endId);
+        this.Delete<BeyondGachaItem>(i => i.ArchiveId == archiveId && i.QueryType == queryType && i.Id >= endId);
     }
 
     public ImmutableArray<BeyondGachaItem> GetBeyondGachaItemImmutableArrayByArchiveId(Guid archiveId)
@@ -135,35 +132,23 @@ public sealed partial class GachaLogRepository : IGachaLogRepository
         return this.ImmutableArray<BeyondGachaItem, BeyondGachaItem>(query => query.Where(i => i.ArchiveId == archiveId).OrderBy(i => i.Id));
     }
 
-    public long GetNewestBeyondGachaItemIdByArchiveIdAndGachaType(Guid archiveId, GachaType GachaType)
+    public long GetNewestBeyondGachaItemIdByArchiveIdAndGachaType(Guid archiveId, GachaType queryType)
     {
-        FrozenSet<GachaType> queryTypes = GetQueryTypes(GachaType);
         BeyondGachaItem? item = this.Query<BeyondGachaItem, BeyondGachaItem?>(query => query
-            .Where(i => i.ArchiveId == archiveId && queryTypes.Contains(i.GachaType))
+            .Where(i => i.ArchiveId == archiveId && i.QueryType == queryType)
             .OrderByDescending(i => i.Id)
             .FirstOrDefault());
 
         return item?.Id ?? 0L;
     }
 
-    public long GetOldestBeyondGachaItemIdByArchiveIdAndGachaType(Guid archiveId, GachaType GachaType)
+    public long GetOldestBeyondGachaItemIdByArchiveIdAndGachaType(Guid archiveId, GachaType queryType)
     {
-        FrozenSet<GachaType> queryTypes = GetQueryTypes(GachaType);
         BeyondGachaItem? item = this.Query<BeyondGachaItem, BeyondGachaItem?>(query => query
-            .Where(i => i.ArchiveId == archiveId && queryTypes.Contains(i.GachaType))
+            .Where(i => i.ArchiveId == archiveId && i.QueryType == queryType)
             .OrderBy(i => i.Id)
             .FirstOrDefault());
 
         return item?.Id ?? long.MaxValue;
-    }
-
-    private FrozenSet<GachaType> GetQueryTypes(GachaType GachaType)
-    {
-        if (GachaType == GachaType.UGCAvatarEventWish)
-        {
-            return BeyondGachaLog.AvatarEventWishTypes;
-        }
-
-        return [GachaType];
     }
 }

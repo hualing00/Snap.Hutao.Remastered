@@ -27,7 +27,6 @@ public sealed partial class UIGFExportDialog : ContentDialog
         if (await contentDialogFactory.EnqueueAndShowAsync(this).ShowTask.ConfigureAwait(false) is ContentDialogResult.Primary)
         {
             await contentDialogFactory.TaskContext.SwitchToMainThreadAsync();
-            SelectionListView.SelectAll();
             return new(true, selectedUids);
         }
 

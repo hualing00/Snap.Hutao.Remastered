@@ -5,6 +5,7 @@ using Snap.Hutao.Remastered.Core;
 using Snap.Hutao.Remastered.Model.Entity;
 using Snap.Hutao.Remastered.Model.InterChange.GachaLog;
 using Snap.Hutao.Remastered.Service.GachaLog;
+using Snap.Hutao.Remastered.Service.Metadata.ContextAbstraction;
 using System.Collections.Immutable;
 using System.IO;
 
@@ -22,6 +23,8 @@ public sealed partial class UIGF42ExportService : AbstractUIGF40ExportService
     {
         await taskContext.SwitchToBackgroundAsync();
 
+        GachaLogServiceMetadataContext metadataContext = await metadataService.GetContextAsync<GachaLogServiceMetadataContext>(token).ConfigureAwait(false);
+
         Model.InterChange.GachaLog.UIGF42 uigf = new()
         {
             Info = new()
@@ -33,7 +36,7 @@ public sealed partial class UIGF42ExportService : AbstractUIGF40ExportService
             },
         };
 
-        ExportGachaArchives(uigf, exportOptions.GachaArchiveUids);
+        ExportGachaArchives(uigf, exportOptions.GachaArchiveUids, metadataContext);
 
         using (FileStream stream = File.Create(exportOptions.FilePath))
         {
@@ -41,9 +44,9 @@ public sealed partial class UIGF42ExportService : AbstractUIGF40ExportService
         }
     }
 
-    private void ExportGachaArchives(Model.InterChange.GachaLog.UIGF42 uigf, ImmutableArray<uint> uids)
+    private void ExportGachaArchives(Model.InterChange.GachaLog.UIGF42 uigf, ImmutableArray<uint> uids, GachaLogServiceMetadataContext metadataContext)
     {
-        base.ExportGachaArchives(uigf, uids);
+        base.ExportGachaArchives(uigf, uids, metadataContext);
         if (uids.Length <= 0)
         {
             return;
@@ -66,7 +69,7 @@ public sealed partial class UIGF42ExportService : AbstractUIGF40ExportService
                 {
                     Uid = uid,
                     TimeZone = 0,
-                    List = beyondDbItems.SelectAsArray(item => item.ToHk4eUGCItem()),
+                    List = beyondDbItems.SelectAsArray(item => item.ToHk4eUGCItem(metadataContext.GetBeyondItem(item.ItemId))),
                 };
                 hk4eUgcResults.Add(hk4eUgcEntry);
             }

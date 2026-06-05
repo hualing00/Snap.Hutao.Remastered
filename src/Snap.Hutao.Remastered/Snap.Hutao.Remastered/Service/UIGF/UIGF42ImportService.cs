@@ -62,9 +62,9 @@ public sealed partial class UIGF42ImportService : AbstractUIGF40ImportService
             int timeZone = entry.TimeZone;
             foreach (GachaType queryType in BeyondGachaLog.QueryTypes)
             {
-                long trimId = gachaLogRepository.GetOldestGachaItemIdByArchiveIdAndQueryType(archiveId, queryType);
+                long trimId = gachaLogRepository.GetOldestBeyondGachaItemIdByArchiveIdAndGachaType(archiveId, queryType);
                 List<BeyondGachaItem> currentTypedList = entry.List
-                    .Where(item => item.GachaType == queryType && item.Id < trimId)
+                    .Where(item => item.GachaType.ToQueryType() == queryType && item.Id < trimId)
                     .OrderByDescending(item => item.Id)
                     .Select(item => BeyondGachaItem.From(archiveId, item, timeZone))
                     .ToList();

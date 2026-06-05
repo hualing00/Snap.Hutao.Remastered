@@ -11,9 +11,11 @@ public class UIGF
 {
     [JsonRequired]
     [JsonPropertyName("info")]
+    [JsonPropertyOrder(0)]
     public UIGFInfo Info { get; init; } = default!;
 
     // ReSharper disable once InconsistentNaming
     [JsonPropertyName("hk4e")]
+    [JsonPropertyOrder(1)]
     public ImmutableArray<UIGFEntry<Hk4eItem>> Hk4e { get; set; }
 }

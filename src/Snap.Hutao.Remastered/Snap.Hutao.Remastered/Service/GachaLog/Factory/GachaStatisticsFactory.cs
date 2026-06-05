@@ -139,8 +139,6 @@ public sealed partial class GachaStatisticsFactory : IGachaStatisticsFactory
                     {
                         BeyondItem beyondItem = context.Metadata.GetBeyondItem(item.ItemId);
 
-                        beyondItem.Name = item.ItemName;
-
                         bool isUp = false;
                         switch (beyondItem.Quality)
                         {

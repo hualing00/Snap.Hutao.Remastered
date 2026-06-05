@@ -12,6 +12,7 @@ public static class GachaConfigTypeExtension
             return configType switch
             {
                 GachaType.SpecialActivityAvatar => GachaType.ActivityAvatar,
+                GachaType.UGCActivityAvatarMaleOne or GachaType.UGCActivityAvatarMaleTwo or GachaType.UGCActivityAvatarFemaleOne or GachaType.UGCActivityAvatarFemaleTwo => GachaType.UGCAvatarEventWish,
                 _ => configType,
             };
         }
