@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using Snap.Hutao.Remastered.Core.DependencyInjection.Annotation.HttpClient;
+using Snap.Hutao.Remastered.Core.IO.Http;
 using Snap.Hutao.Remastered.Web.Endpoint.Hutao;
 using Snap.Hutao.Remastered.Web.Hutao.Response;
 using Snap.Hutao.Remastered.Web.Request.Builder;
@@ -196,6 +197,8 @@ public sealed partial class HutaoPassportClient
         HttpRequestMessageBuilder builder = httpRequestMessageBuilderFactory.Create()
             .SetRequestUri(hutaoEndpointsFactory.Create().PassportRefreshToken())
             .PostJson(data);
+
+        builder.Options.Set(RetryHttpHandler.DisableRetry, true);
 
         HutaoResponse<TokenSet>? resp = await builder
             .SendAsync<HutaoResponse<TokenSet>>(httpClient, token)
